@@ -1,0 +1,17 @@
+# Ignorar a pasta models
+models/
+
+# Ignorar arquivos com extensão .onnx
+*.onnx
+
+# Ignorar arquivos do Visual Studio
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Ignorar arquivos Python de cache
+__pycache__/
+*.pyc
+*.pyo
