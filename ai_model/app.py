@@ -115,6 +115,53 @@ class Model:
 
 model = Model("yolov8s")
 
+@app.route('/detect_front', methods=['POST'])
+def upload_image():
+    # Verifica se a imagem está presente
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image part'}), 400
+
+    image_file = request.files['image']
+    
+    # Verifica se o arquivo tem um nome
+    if image_file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    # Pega os parâmetros extras do formulário
+    timestamp = request.form.get('timestamp')
+    confidence = request.form.get('confidence', type=float)  # Pega o confidence, com valor default
+    iou = request.form.get('iou', type=float)  # Pega o IOU, com valor default
+    
+    if not timestamp:
+        return jsonify({'error': 'Timestamp is required'}), 400
+    if confidence is None or iou is None:
+        return jsonify({'error': 'Confidence and IOU values are required'}), 400
+
+    try:
+        # Converte a imagem recebida para o formato necessário
+        img = Image.open(image_file.stream).convert('RGB')
+
+        # Faça a detecção (substitua pelo seu modelo real)
+        predictions = model(img, confidence, iou)
+
+        # Descartar a imagem para liberar memória
+        img.close()
+        del image_file
+
+        # Converte as previsões para o formato desejado (lista de Predictions)
+        detections = [prediction.to_dict() for prediction in predictions]
+
+        # Retornar as detecções com o timestamp associado
+        response = {
+            'timestamp': timestamp,
+            'detections': detections
+        }
+
+        return jsonify(response)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/detect', methods=['POST'])
 def detect():
     image_path = request.json['image_path']
