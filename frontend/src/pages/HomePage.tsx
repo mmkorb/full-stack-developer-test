@@ -1,6 +1,6 @@
-import React from "react";
+import VideoPlayer from "../components/VideoPlayer"; // Certifique-se de que o VideoPlayer está corretamente tipado
 
-export default function HomePage() {
+const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Cabeçalho */}
@@ -13,13 +13,13 @@ export default function HomePage() {
         {/* Divisão 1: Players */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4">
-            <h2 className="text-lg font-bold mb-2">Player Original</h2>
-            {/* Substitua com seu componente de vídeo */}
-            <div className="bg-gray-200 h-64 rounded">Video Player 1</div>
+            <h2 className="text-lg font-bold mb-2">Vídeo Original</h2>
+            {/* Componente de vídeo */}
+            <VideoPlayer title="Vídeo Original"/>
           </div>
           <div className="bg-white rounded-xl shadow p-4">
-            <h2 className="text-lg font-bold mb-2">Player com Detecções</h2>
-            {/* Substitua com seu componente de vídeo com bounding boxes */}
+            <h2 className="text-lg font-bold mb-2">Vídeo com Detecções</h2>
+            {/* Componente de vídeo com detecções */}
             <div className="bg-gray-200 h-64 rounded">Video Player 2</div>
           </div>
         </div>
@@ -58,4 +58,6 @@ export default function HomePage() {
       </div>
     </div>
   );
-}
+};
+
+export default HomePage;

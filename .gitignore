@@ -18,6 +18,7 @@ __pycache__/
 
 # Ignorar a pasta do ambiente virtual
 oai/
+venv/
 
 # Ignorar outros arquivos temporários
 *.log
