@@ -1,17 +1,18 @@
-import { useState } from "react";
-import FrameGrid from './FrameGrid';
+import { useState, useRef } from "react";
+import apiService from '../services/apiService';
 
 interface VideoPlayerProps {
   title: string;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
-  const [videoSrc, setVideoSrc] = useState<string | null>(null);  // O estado pode ser uma string ou null
-  const [fileName, setFileName] = useState<string>("Nenhum arquivo carregado");  // O estado é uma string
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string>("Nenhum arquivo carregado");
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Tipando o evento como React.ChangeEvent<HTMLInputElement>
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];  // Verifica se o arquivo foi selecionado
+    const file = e.target.files?.[0];
     if (file && file.type === "video/mp4") {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
@@ -21,11 +22,53 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
     }
   };
 
+  const captureFrame = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+
+      // Ajustar o tamanho do canvas para o tamanho do vídeo
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Desenhar o frame atual do vídeo no canvas
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Converter a imagem do canvas para um Data URL (base64) em JPEG
+      const imageData = canvas.toDataURL("image/jpeg"); 
+
+      // Converter base64 para File
+      const byteString = atob(imageData.split(',')[1]);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+      }
+      const timestamp = video.currentTime.toString();
+      const file = new File([uint8Array], "frame.jpg", { type: 'image/jpeg' });
+
+      // Enviar o frame para o serviço
+      apiService.objectDetectionService(file, timestamp)
+        .then((response) => {
+          console.log('Detecção de objetos:', response);
+        })
+        .catch((error) => {
+          console.error('Erro ao enviar o frame:', error);
+        });
+    }
+  };
+
   return (
     <div className="video-player">
       <h3>{title}</h3>
       {videoSrc ? (
-        <video width="100%" controls>
+        <video
+          ref={videoRef}
+          width="100%"
+          controls
+          onTimeUpdate={captureFrame} // Chama captureFrame sempre que o tempo do vídeo for atualizado
+        >
           <source src={videoSrc} type="video/mp4" />
           Seu navegador não suporta a tag de vídeo.
         </video>
@@ -54,6 +97,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
         {/* Nome do arquivo */}
         <span className="ml-4 text-gray-700">{fileName}</span>
       </div>
+
+      {/* Canvas invisível usado para capturar o frame */}
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };

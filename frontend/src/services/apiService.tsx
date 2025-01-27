@@ -19,7 +19,6 @@ interface DetectionResponse {
   detections: Prediction[]; 
 }
 
-// Tipagem do serviço
 const objectDetectionService = async (
   frameFile: File,           
   timestamp: string | number, 
