@@ -1,20 +1,20 @@
 import axios from 'axios';
 import config from '../config/config';
 
-interface BBOX {
+export interface BBOX {
   left: number;
   top: number;
   width: number;
   height: number;
 }
 
-interface Prediction {
+export interface Prediction {
   class_name: string; 
   confidence: number;
   box: BBOX;
 }
 
-interface DetectionResponse {
+export interface DetectionResponse {
   timestamp: string; 
   detections: Prediction[]; 
 }
@@ -36,8 +36,8 @@ const objectDetectionService = async (
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 10000,  // Timeout de 10 segundos
     });
-
     return response.data as DetectionResponse;
   } catch (error) {
     console.error('Erro ao enviar o frame:', error);
