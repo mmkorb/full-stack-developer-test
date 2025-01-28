@@ -41,7 +41,10 @@ const objectDetectionService = async (
     return response.data as DetectionResponse;
   } catch (error) {
     console.error('Erro ao enviar o frame:', error);
-    throw new Error('Erro ao enviar o frame');
+    return {
+      timestamp: timestamp.toString(),
+      detections: [],
+    };
   }
 };
 

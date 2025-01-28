@@ -13,6 +13,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
   const [detectionsBuffer, setDetectionsBuffer] = useState<Prediction[][]>(
     Array(config.FRAMES_BUFFER_SIZE).fill([])
   );
+  const [iouThreshold, setIouThreshold] = useState<number>(0.5); // Estado para IOU Threshold
+  const [confidenceThreshold, setConfidenceThreshold] = useState<number>(0.5); // Estado para Confidence Threshold
+  const [isFormLocked, setIsFormLocked] = useState<boolean>(false); // Estado para controlar o bloqueio dos campos
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -24,6 +27,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
       setFileName(file.name);
+      setIsFormLocked(true); // Trava os campos ao carregar o vídeo
     } else {
       alert("Por favor, carregue um vídeo no formato MP4.");
     }
@@ -52,16 +56,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
         uint8Array[i] = byteString.charCodeAt(i);
       }
 
-      const file = new File([uint8Array], `frame.jpg`, { type: "image/jpeg" });
+      const frame_filename = timestampRef.current.replace(/:/g, "_") + ".jpg"
+      const file = new File([uint8Array],frame_filename, { type: "image/jpeg" });
 
       apiService
-        .objectDetectionService(file, "frame")
+        .objectDetectionService(file, frame_filename, confidenceThreshold, iouThreshold)
         .then((response: DetectionResponse) => {
           const { detections } = response;
           drawImageOnCanvas(file, detections);
-        })
-        .catch((error) => {
-          console.error("Erro ao enviar o frame:", error);
         });
     }
   };
@@ -135,6 +137,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
     };
   }, [videoSrc]);
 
+  const handleReset = () => {
+    setIsFormLocked(false); // Libera os campos ao resetar
+    window.location.reload();
+  };
+
   return (
     <div className="video-player">
       <h3>{title}</h3>
@@ -162,10 +169,55 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
         <strong>Timestamp:</strong> {timestampRef.current}
       </div>
 
+      {/* Campos de formulário para IOU Threshold e Confidence Threshold */}
+      <div className="mt-4">
+        <div className="flex items-center gap-4">
+          <div>
+            <label htmlFor="iou-threshold" className="block text-sm font-medium text-gray-700">
+              IOU Threshold
+            </label>
+            <input
+              id="iou-threshold"
+              type="number"
+              step="0.1"
+              min="0"
+              max="1"
+              value={iouThreshold}
+              onChange={(e) => setIouThreshold(parseFloat(e.target.value))}
+              className="p-2 border rounded"
+              disabled={isFormLocked} // Desabilita o campo se o formulário estiver travado
+            />
+          </div>
+          <div>
+            <label htmlFor="confidence-threshold" className="block text-sm font-medium text-gray-700">
+              Confidence Threshold
+            </label>
+            <input
+              id="confidence-threshold"
+              type="number"
+              step="0.1"
+              min="0"
+              max="1"
+              value={confidenceThreshold}
+              onChange={(e) => setConfidenceThreshold(parseFloat(e.target.value))}
+              className="p-2 border rounded"
+              disabled={isFormLocked} // Desabilita o campo se o formulário estiver travado
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Botões de Carregar MP4 e Reset */}
       <div className="mt-4 flex items-center">
+        <button
+          onClick={handleReset}
+          className="p-2 bg-gray-300 text-gray-700 rounded cursor-pointer flex items-center justify-center w-auto"
+        >
+          Reset
+        </button>
         <label
           htmlFor="video-upload"
-          className="p-2 bg-gray-300 text-gray-700 rounded cursor-pointer flex items-center justify-center w-auto"
+          className="ml-4 p-2 bg-gray-300 text-gray-700 rounded cursor-pointer flex items-center justify-center w-auto"
         >
           Carregar MP4
         </label>
