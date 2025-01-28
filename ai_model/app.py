@@ -5,9 +5,11 @@ import onnxruntime as ort
 from typing import List
 from dataclasses import dataclass
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from smart_open import open
 
 app = Flask(__name__)
+CORS(app)
 
 @dataclass
 class BBOX:
@@ -188,4 +190,4 @@ def load_model():
     return f"Model {model_name} is loaded"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000)
