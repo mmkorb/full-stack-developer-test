@@ -1,29 +1,37 @@
 # Full-stack take-home test for Overview.ai
 
 ## Overview
-This project is a full-stack application that showcases an AI object detection model's predictions through a user-friendly dashboard. The backend is built with Flask in Python, serving predictions from an ONNX model. The front end is developed using React and Fabric.js, providing an interactive interface to display the detected objects. You can edit any backend files, even changing the API structure.
+This project is a full-stack application that showcases an AI object detection model's predictions through a user-friendly dashboard. 
+The backend is built with Flask in Python, serving predictions from an ONNX model. 
+The front end is developed using React and Fabric.js, providing an interactive interface to display the detected objects. 
 
 ## The Task
-The task is to create a frontend that interfaces with the backend, plays a video file, sends each frame to the API for prediction, and then shows the results on the frontend. The interface should have a video player, a configuration area for model settings to be configured (such as IoU and Confidence Level), a preview area where each bounding box returned by the model is drawn on top of the predicted frame (using Fabric.JS), and a table for the last 10 prediction results. You may use any video and any UI framework you like. 
-
-Each inference result should be saved to a Postgres database on the backend. Feel free to add or modify endpoints.
+The task is to create a frontend that 
+  - interfaces with the backend :white_check_mark:
+  - plays a video file in a video player :white_check_mark:
+  - sends each frame to the API for prediction :white_check_mark:
+  - shows the results on the frontend :white_check_mark:
+  - configuration area for model settings to be configured (such as IoU and Confidence Level) :white_check_mark:
+  - a preview area where each bounding box returned by the model is drawn on top of the predicted frame (using Fabric.JS) :white_check_mark:
+  - a table for the last 10 prediction results :white_check_mark:
+  - each inference result should be saved to a Postgres database on the backend :white_check_mark:
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- PostgreSQL
+- Python 3.8 or higher :white_check_mark:
+- PostgreSQL :white_check_mark:
 
 ### API Endpoints
 
 - **Detect Objects:**
-  - Endpoint: `/detect`
+  - Endpoint: `/detect_frontend`
   - Method: POST
-  - Description: Receives an image path, confidence threshold, and IoU threshold and returns the detection results.
-  - Example 1:
+  - Description: Receives an image file, confidence threshold, and IoU threshold and returns the detection results.
+  - Example:
     - request:
     ```
     {
-      "image_path": "/app/test/bus.jpg",
+      "imageFile": "bus.jpg",
       "confidence": 0.7,
       "iou": 0.5
     }
@@ -53,50 +61,23 @@ Each inference result should be saved to a Postgres database on the backend. Fee
       }
     ]
     ```
-  - Example 2:
-    - request:
-    ```
-    {
-      "image_path": "https://storage.googleapis.com/sfr-vision-language-research/BLIP/demo.jpg",
-      "confidence": 0.7,
-      "iou": 0.5
-    }
-    ```
-    - response:
-    ```
-    [
-      {
-        "box": {"height": 562, "left": 924, "top": 522, "width": 572},
-        "class_name": "person",
-        "confidence": 0.925483226776123
-      },
-      {
-        "box": {"height": 623, "left": 456, "top": 585, "width": 733},
-        "class_name": "dog",
-        "confidence": 0.8675347566604614
-      }
-    ]
-    ```
-    
-- **Health Check:**
-  - Endpoint: `/health_check`
-  - Method: GET
-  - Description: Checks if the model is loaded and returns the status.
-
-- **Load Model:**
-  - Endpoint: `/load_model`
-  - Method: POST
-  - Description: Loads a specified `model_name` for object detection. One of `yolov8n` (nano, faster, less accurate) or `yolov8s` (small, a bit slower and more accurate). 
-
 ## Architecture
 
-- **Backend:** Flask application serving the AI model's predictions.
-- **Frontend:** React application with Fabric.js for interactive visualization. Use Typescript. You may use any UI framework you are familiar with.
-- **Database:** PostgreSQL is used to store user inputs and model predictions.
+- **Backend:** Flask application serving the AI model's predictions, built using Clean Architecture and Domain-Driven Design (DDD). :white_check_mark:
+- **Frontend:** React application with Typescript and Fabric.js. :white_check_mark:
+- **Database:** PostgreSQL is used to store user inputs and model predictions. :white_check_mark:
 
 
-## Delivery
+## Run
+docker network create network_oai
 
-This assignment should be delivered through GitHub. Please create a **private** repository and add Adriano (@opassos) and Xiao (@xyk2) as collaborators. You should also record a short (2 to 5 minutes) video showcasing your solution. You can upload the video to any streaming service, but we recommend making an **unlisted** video on YouTube. 
+### inside frontend
+docker build -t frontend_oai .
+docker run -p 3000:3000 --network network_oai frontend_oai
 
-Once the hiring process is complete, you can make your work public (both repo and video).
+### after get postgres on docker hub
+docker run --name postgres_oai -e POSTGRES_PASSWORD=oai -d -p 5432:5432 --network network_oai postgres
+
+### inside frontend
+docker build -t backend_oai .
+docker run -p 5000:5000 --network network_oai backend_oai
