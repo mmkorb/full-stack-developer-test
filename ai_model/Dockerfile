@@ -16,11 +16,14 @@ RUN pip install --upgrade pip && \
     pip install  --no-cache-dir onnxruntime-gpu==1.14.0 && \
     pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
+# Set environment variables for Flask
+ENV FLASK_APP=app.py
+
 # Copy the rest of the application code to the working directory
 COPY . .
 
 # Expose the port on which the app will run
-EXPOSE 5000
+EXPOSE 5000 5432
 
 # Define the command to run the app
-CMD ["python", "app.py"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
