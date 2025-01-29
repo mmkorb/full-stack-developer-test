@@ -13,5 +13,5 @@ if (rootElement) {
     </React.StrictMode>
   );
 } else {
-  console.error("Elemento 'root' não encontrado no DOM!");
+  console.error("Element 'root' not found in the DOM!");
 }

@@ -8,14 +8,14 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string>("Nenhum arquivo carregado");
+  const [fileName, setFileName] = useState<string>("No file loaded");
   const [framesBuffer, setFramesBuffer] = useState<string[]>(Array(config.FRAMES_BUFFER_SIZE).fill(null));
   const [detectionsBuffer, setDetectionsBuffer] = useState<Prediction[][]>(
     Array(config.FRAMES_BUFFER_SIZE).fill([])
   );
-  const [iouThreshold, setIouThreshold] = useState<number>(0.5); // Estado para IOU Threshold
-  const [confidenceThreshold, setConfidenceThreshold] = useState<number>(0.5); // Estado para Confidence Threshold
-  const [isFormLocked, setIsFormLocked] = useState<boolean>(false); // Estado para controlar o bloqueio dos campos
+  const [iouThreshold, setIouThreshold] = useState<number>(0.5); 
+  const [confidenceThreshold, setConfidenceThreshold] = useState<number>(0.5); 
+  const [isFormLocked, setIsFormLocked] = useState<boolean>(false); 
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -27,9 +27,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
       const url = URL.createObjectURL(file);
       setVideoSrc(url);
       setFileName(file.name);
-      setIsFormLocked(true); // Trava os campos ao carregar o vídeo
+      setIsFormLocked(true); 
     } else {
-      alert("Por favor, carregue um vídeo no formato MP4.");
+      alert("Please upload a video in MP4 format.");
     }
   };
 
@@ -138,7 +138,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
   }, [videoSrc]);
 
   const handleReset = () => {
-    setIsFormLocked(false); // Libera os campos ao resetar
+    setIsFormLocked(false); 
     window.location.reload();
   };
 
@@ -157,11 +157,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
           }}
         >
           <source src={videoSrc} type="video/mp4" />
-          Seu navegador não suporta a tag de vídeo.
+          Your browser does not support the video tag.
         </video>
       ) : (
         <div className="bg-gray-200 h-64 rounded flex items-center justify-center">
-          <span>Sem vídeo carregado</span>
+          <span>No video loaded</span>
         </div>
       )}
 
@@ -169,7 +169,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
         <strong>Timestamp:</strong> {timestampRef.current}
       </div>
 
-      {/* Campos de formulário para IOU Threshold e Confidence Threshold */}
+      {/* Forms, IOU Threshold and Confidence Threshold */}
       <div className="mt-4">
         <div className="flex items-center gap-4">
           <div>
@@ -185,7 +185,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
               value={iouThreshold}
               onChange={(e) => setIouThreshold(parseFloat(e.target.value))}
               className="p-2 border rounded"
-              disabled={isFormLocked} // Desabilita o campo se o formulário estiver travado
+              disabled={isFormLocked}
             />
           </div>
           <div>
@@ -201,13 +201,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
               value={confidenceThreshold}
               onChange={(e) => setConfidenceThreshold(parseFloat(e.target.value))}
               className="p-2 border rounded"
-              disabled={isFormLocked} // Desabilita o campo se o formulário estiver travado
+              disabled={isFormLocked} 
             />
           </div>
         </div>
       </div>
 
-      {/* Botões de Carregar MP4 e Reset */}
+      {/* Upload MP4 e Reset */}
       <div className="mt-4 flex items-center">
         <button
           onClick={handleReset}
@@ -219,7 +219,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
           htmlFor="video-upload"
           className="ml-4 p-2 bg-gray-300 text-gray-700 rounded cursor-pointer flex items-center justify-center w-auto"
         >
-          Carregar MP4
+          Upload MP4
         </label>
         <input
           id="video-upload"
@@ -247,7 +247,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
                   className="w-full h-full object-contain"
                 />
               ) : (
-                <span className="text-gray-500">Sem imagem</span>
+                <span className="text-gray-500">No image</span>
               )}
             </div>
 
@@ -256,13 +256,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ title }) => {
                 <ul className="text-sm text-gray-700 list-disc pl-4">
                   {detectionsBuffer[index].map((detection, dIndex) => (
                     <li key={dIndex}>
-                      <strong>{detection.class_name}</strong> - Confiança:{" "}
+                      <strong>{detection.class_name}</strong> - Confidence:{" "}
                       {(detection.confidence * 100).toFixed(2)}%
                     </li>
                   ))}
                 </ul>
               ) : (
-                <span className="text-gray-500">Sem detecções</span>
+                <span className="text-gray-500">No detections</span>
               )}
             </div>
           </div>

@@ -1,33 +1,33 @@
-# Etapa 1: Build da aplicação
+# Step 1: Build the application
 FROM node:16-alpine AS build
 
 WORKDIR /app
 
-# Copia os arquivos do package.json e package-lock.json
+# Copy the package.json and package-lock.json files
 COPY package.json package-lock.json ./
 
-# Instala as dependências de produção e desenvolvimento
+# Install production and development dependencies
 RUN npm install
 
-# Copia o código fonte para dentro do container
+# Copy the source code into the container
 COPY . ./
 
-# Compila a aplicação
+# Compile the application
 RUN npm run build
 
-# Etapa 2: Serve a aplicação com http-server
+# Step 2: Serve the application with http-server
 FROM node:16-alpine
 
 WORKDIR /app
 
-# Instala o http-server globalmente
+# Install http-server globally
 RUN npm install -g http-server
 
-# Copia os arquivos build da etapa anterior
+# Copy the build files from the previous step
 COPY --from=build /app/build ./build
 
-# Expondo a porta 3000 e 5000
+# Exposing ports 3000 and 5000
 EXPOSE 3000 5000
 
-# Comando para rodar o http-server na porta 3000
+# Command to run the http-server on port 3000
 CMD ["http-server", "build", "-p", "3000", "-c-1"]

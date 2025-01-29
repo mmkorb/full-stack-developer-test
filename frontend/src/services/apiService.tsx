@@ -36,7 +36,7 @@ const objectDetectionService = async (
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 10000,  // Timeout de 10 segundos
+      timeout: 10000,  // 10sec Timeout
     });
     return response.data as DetectionResponse;
   } catch (error) {

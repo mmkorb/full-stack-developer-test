@@ -1,36 +1,36 @@
-# Ignorar a pasta models
+# Ignore the models folder
 models/
 
-# Ignorar arquivos com extensão .onnx
+# Ignore files with the .onnx extension
 *.onnx
 
-# Ignorar arquivos do Visual Studio
+# Ignore Visual Studio files
 .vscode/
 *.user
 *.userosscache
 *.suo
 *.sln.docstates
 
-# Ignorar arquivos Python de cache
+# Ignore Python cache files
 __pycache__/
 *.pyc
 *.pyo
 
-# Ignorar a pasta do ambiente virtual
+# Ignore the virtual environment folder
 oai/
 venv/
 
-# Ignorar outros arquivos temporários
+# Ignore other temporary files
 *.log
 *.tmp
 
-# Ignorar a pasta data
+# Ignore the data folder
 data/
 
-# Ignorar a pasta node_modules dentro de frontend
+# Ignore the node_modules folder inside frontend
 frontend/node_modules/
 
-# Ignorar o arquivo package-lock.json
+# Ignore the package-lock.json file
 package-lock.json
 
 # dependencies

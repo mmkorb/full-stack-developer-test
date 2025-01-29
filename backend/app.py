@@ -5,7 +5,7 @@ from application.controllers.detect_controller import detect_controller
 app = Flask(__name__)
 CORS(app)
 
-# Registrando o controlador (routes)
+# Controller register (routes)
 app.register_blueprint(detect_controller)
 
 if __name__ == "__main__":
