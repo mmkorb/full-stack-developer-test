@@ -91,5 +91,8 @@ docker run -p 5000:5000 --network network_oai backend_oai
 ```
 
 ## Briefing video
-[![Watch on YouTube](https://img.youtube.com/vi/i5jJhIHl2QQ/0.jpg)](https://www.youtube.com/watch?v=i5jJhIHl2QQ)
+<a href="https://www.youtube.com/watch?v=i5jJhIHl2QQ" target="_blank">
+  <img src="https://img.youtube.com/vi/i5jJhIHl2QQ/0.jpg" alt="Watch on YouTube">
+</a>
+
 
