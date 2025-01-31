@@ -69,19 +69,27 @@ The task is to create a frontend that
 
 
 ## Run
+```
 docker network create network_oai
+```
 
 ### inside frontend
+```
 docker build -t frontend_oai .
 docker run -p 3000:3000 --network network_oai frontend_oai
+```
 
 ### after get postgres on docker hub
+```
 docker run --name postgres_oai -e POSTGRES_PASSWORD=oai -d -p 5432:5432 --network network_oai postgres
+```
 
 ### inside backend
+```
 docker build -t backend_oai .
 docker run -p 5000:5000 --network network_oai backend_oai
+```
 
 ## Briefing video
-[![Watch on YouTube](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=i5jJhIHl2QQ)
+[![Watch on YouTube](https://img.youtube.com/vi/i5jJhIHl2QQ/0.jpg)](https://www.youtube.com/watch?v=i5jJhIHl2QQ)
 
