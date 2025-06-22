@@ -1,4 +1,4 @@
-# Full-stack take-home test for Overview.ai
+# Full-stack developer test 
 
 ## Overview
 This project is a full-stack application that showcases an AI object detection model's predictions through a user-friendly dashboard. 
