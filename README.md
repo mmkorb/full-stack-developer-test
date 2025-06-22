@@ -64,7 +64,7 @@ The task is to create a frontend that
 ## Architecture
 
 - **Backend:** Flask application serving the AI model's predictions, built using Clean Architecture and Domain-Driven Design (DDD). :white_check_mark:
-- **Frontend:** React application with Typescript and Fabric.js. :white_check_mark:
+- **Frontend:** React application with Typescript. :white_check_mark:
 - **Database:** PostgreSQL is used to store user inputs and model predictions. :white_check_mark:
 
 
