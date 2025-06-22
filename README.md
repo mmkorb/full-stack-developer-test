@@ -12,7 +12,7 @@ The task is to create a frontend that
   - sends each frame to the API for prediction :white_check_mark:
   - shows the results on the frontend :white_check_mark:
   - configuration area for model settings to be configured (such as IoU and Confidence Level) :white_check_mark:
-  - a preview area where each bounding box returned by the model is drawn on top of the predicted frame (using Fabric.JS) :white_check_mark:
+  - a preview area where each bounding box returned by the model is drawn on top of the predicted frame :white_check_mark:
   - a table for the last 10 prediction results :white_check_mark:
   - each inference result should be saved to a Postgres database on the backend :white_check_mark:
 
